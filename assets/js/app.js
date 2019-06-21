@@ -1,4 +1,8 @@
-// @TODO: YOUR CODE HERE!
+// David Kloepper
+// Data Visualization Bootcamp, Cohort 3
+// June 20th, 2019
+
+
 var svgWidth = 960;
 var svgHeight = 500;
 
@@ -99,25 +103,32 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
 
   switch(chosenXAxis){
       case "healthcare":
-        var labelX = "Lacks Healthcare (%)";
+        var labelX = "Lacks Healthcare:";
         break;
       case "obesity":
-        var labelX = "Obese (%)";
+        var labelX = "Obesity:";
         break;
       case "smokes":
-        var labelX = "Smokes (%)";
+        var labelX = "Smoking:";
         break;
     }
+    var suffixX = "%";
 
     switch(chosenYAxis){
       case "age":
-        var labelY = "Age (Median)";
+        var labelY = "Median Age:";
+        var suffixY = "";
+        var prefixY = "";
         break;
       case "income":
-        var labelY = "Income (Median)";
+        var labelY = "Median Income:";
+        var suffixY = "";
+        var prefixY = "$";
         break;
       case "poverty":
-        var labelY = "In Poverty (%)";
+        var labelY = "In Poverty:";
+        var suffixY = "%";
+        var prefixY = "";
         break;
     }
 
@@ -125,14 +136,14 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
       .attr("class", "tooltip")
       .offset([0, 0])
       .html(function(d) {
-        return (`<b>${d.abbr}</b><br>${labelX} ${d[chosenXAxis]}<br>${labelY} ${d[chosenYAxis]}`);
+        return (`<b>${d.state}</b><br>${labelX} ${d[chosenXAxis]}${suffixX}<br>${prefixY}${labelY} ${d[chosenYAxis]}${suffixY}`);
       });
 
     circlesGroup.call(toolTip);
 
     circlesGroup.on("mouseover", function(data) {
       // toolTip.show(data);
-      toolTip.show(data, this);
+      toolTip.show(data, this).style("opacity", .7);
     })
       // onmouseout event
       .on("mouseout", function(data) {
@@ -173,7 +184,8 @@ d3.csv("assets/data/data.csv").then(function(censusData) {
   // append y axis
   var yAxis = chartGroup.append("g")
     .classed("y-axis", true)
-    .attr("transform", `translate(${width}, 0)`)
+    // .attr("transform", `translate(${width}, 0)`)
+    .attr("transform", `translate(0, 0)`)
     .call(leftAxis);
 
   // append initial circles
@@ -192,11 +204,11 @@ d3.csv("assets/data/data.csv").then(function(censusData) {
     .data(censusData)
     .enter()
     .append("text")
-        .attr("dx", d => xLinearScale(d[chosenXAxis])-5)
-        .attr("dy", d => yLinearScale(d[chosenYAxis])+5)
-        .attr("font-size", "10px")
-        .text(function(d){return d.abbr})
-        .classed("stateAbbr", true);
+    .attr("dx", d => xLinearScale(d[chosenXAxis])-5)
+    .attr("dy", d => yLinearScale(d[chosenYAxis])+5)
+    .attr("font-size", "10px")
+    .text(function(d){return d.abbr})
+    .classed("stateAbbr", true);
 
   // Create group for 3 x-axis labels
   var labelsXGroup = chartGroup.append("g")
@@ -230,7 +242,7 @@ d3.csv("assets/data/data.csv").then(function(censusData) {
 
   var ageLabel = labelsYGroup.append("text")
     .attr("x", 0 - (height / 2))
-    .attr("y", 0 - margin.left + 20)
+    .attr("y", 0 - margin.left +20)
     .attr("value", "age") // value to grab for event listener
     .classed("active", true)
     .text("Age (Median)");

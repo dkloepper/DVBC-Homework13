@@ -1,3 +1,7 @@
+/* David Kloepper
+Data Visualization Bootcamp, Cohort 3
+June 20th, 2019 */
+
 .iframeContainer {
   padding: 20px;
   border: 1px solid #e3e3e3;
@@ -32,7 +36,7 @@ body {
 
 .tooltip {
   text-align: center;
-  background-color: darkblue;
+  background-color: black;
   color: white;
   font-size: 12px;
 }
